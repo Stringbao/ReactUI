@@ -11,7 +11,7 @@ export default class LeInput extends React.Component{
         this._id = Tool._idSeed.newId();
         this._validataType = "input";
         this._label = this.props.label?this.props.label:"";
-
+        
         this.state = {
             cls:"",
             focus:this.props.value?true:false
@@ -83,6 +83,22 @@ export default class LeInput extends React.Component{
         return this.props.value;
     }
 
+    doClear(e){
+        e.target.value = "";
+        document.getElementById(this._id).focus();
+        this.callbackDomEvent(KEYS.EVENT_KEY.CHANGE,event);
+    }
+
+    getClearIconStatus(){
+        if(this.props.value == ""){
+            return "none";
+        }
+        if(!this.state.focus){
+            return "none";
+        }
+        return "block";
+    }
+
     render(){
         return (
             (
@@ -91,13 +107,14 @@ export default class LeInput extends React.Component{
                     <div className="input_slot">
                         <div className="text_field">
                             <label>{this._label}</label>
-                            <input value = {this.props.value} type="text" 
+                            <input id={this._id} value = {this.props.value} type="text" 
                                 placeholder = {this.getPlaceHolder()}
                                 onFocus={(e)=>this.focusHandler(e)} 
                                 onBlur={(e)=>this.blurHandler(e)}
                                 onChange={(e)=>this.changeHandler(e)}
                                 onKeyDown={(e)=>this.keyDownHandler(e)}
                             />
+                            <i style={{display:this.getClearIconStatus()}} onClick={(e) => this.doClear(e)} className='input_icon_close'></i>
                         </div>
                     </div>
                     <div className="input_detail"></div>
