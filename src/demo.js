@@ -1,6 +1,6 @@
 
 import React from 'react'
-import {LeInput} from "./out/index.js";
+import {LeInput, LeButton} from "./out/index.js";
 
 export default class Demo extends React.Component{
     constructor(props){
@@ -52,6 +52,17 @@ export default class Demo extends React.Component{
         }
     }
 
+    btnClick(e){
+        
+    }
+
+    promiseFn(){
+        console.log(1);
+        return new Promise((resolve,reject)=>{
+            resolve(1);
+        })
+    }
+
     render(){
         return (
             <div>
@@ -59,6 +70,8 @@ export default class Demo extends React.Component{
 
                 <LeInput cb = {this.dome.bind(this)} field="value1" placeholder="enter age" value={this.state.value1} label="Age:" ></LeInput>
 
+                {/* <LeButton value="click" click={(e)=>this.btnClick(e)}></LeButton> */}
+                <LeButton value="submit" submit={()=>this.promiseFn()}></LeButton>
                 <input type="button" value="get1" onClick={e=>this.getClick(1)}></input>
                 <input type="button" value="get2" onClick={e=>this.getClick(2)}></input>
                 <br />

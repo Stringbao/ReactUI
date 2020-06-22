@@ -41,9 +41,7 @@ export default class LeInput extends React.Component{
     /*************** 辅助函数 end *****************/
 
     /*************** 生命周期 begin *****************/
-    UNSAFE_componentWillReceiveProps(props){
-        
-    }
+    componentWillReceiveProps(props){}
 
     componentDidMount(){
 
@@ -116,9 +114,6 @@ export default class LeInput extends React.Component{
         document.getElementById(this._id).focus();
         this.callbackDomEvent(KEYS.EVENT_KEY.CHANGE,event);
     }
-
-
-
     /*************** Methods end *****************/
     
 
