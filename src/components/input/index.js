@@ -18,6 +18,7 @@ export default class LeInput extends React.Component{
         }
     }
 
+    /*************** 辅助函数 begin *****************/
     getPlaceHolder(){
         let _placeholder = "";
         if(!this.state.focus){
@@ -28,8 +29,20 @@ export default class LeInput extends React.Component{
         return _placeholder;
     }
 
+    getClearIconStatus(){
+        if(this.props.value == ""){
+            return "none";
+        }
+        if(!this.state.focus){
+            return "none";
+        }
+        return "block";
+    }
+    /*************** 辅助函数 end *****************/
+
+    /*************** 生命周期 begin *****************/
     UNSAFE_componentWillReceiveProps(props){
-        // this._value = props.value;
+        
     }
 
     componentDidMount(){
@@ -45,6 +58,10 @@ export default class LeInput extends React.Component{
         return true;
     }
 
+    /*************** 生命周期 end *****************/
+
+
+    /*************** Event begin *****************/
     callbackDomEvent(type,event){
         this.props.cb(this.props.field,type,event);
         // this.props.onDomEvent && this.props.onDomEvent(type,event);
@@ -78,9 +95,20 @@ export default class LeInput extends React.Component{
         }
         // this.callbackDomEvent(KEYS.EVENT_KEY.PRESS,event);
     }
+    /*************** Event end *****************/
 
+
+    /*************** Methods begin *****************/
     getValue(){
         return this.props.value;
+    }
+
+    setValue(){
+
+    }
+
+    setFocus(){
+        document.getElementById(this._id).focus();
     }
 
     doClear(e){
@@ -89,15 +117,10 @@ export default class LeInput extends React.Component{
         this.callbackDomEvent(KEYS.EVENT_KEY.CHANGE,event);
     }
 
-    getClearIconStatus(){
-        if(this.props.value == ""){
-            return "none";
-        }
-        if(!this.state.focus){
-            return "none";
-        }
-        return "block";
-    }
+
+
+    /*************** Methods end *****************/
+    
 
     render(){
         return (
@@ -107,7 +130,7 @@ export default class LeInput extends React.Component{
                     <div className="input_slot">
                         <div className="text_field">
                             <label>{this._label}</label>
-                            <input id={this._id} value = {this.props.value} type="text" 
+                            <input id={this._id} value = {this.props.value} type={this.props.type =="text"?"text":"password"}
                                 placeholder = {this.getPlaceHolder()}
                                 onFocus={(e)=>this.focusHandler(e)} 
                                 onBlur={(e)=>this.blurHandler(e)}
@@ -125,22 +148,28 @@ export default class LeInput extends React.Component{
 }
 
 
-// LeInput.defaultProps = {
-//     disabled: false,
-//     tips:"",
-//     errorMessage:"",
-//     placeholder:"",
-//     label:"",
-//     value:"",
-//     reg:""
-// }
+LeInput.defaultProps = {
+    type:"text",
+    disabled: false,
+    tips:"",
+    errorMessage:"",
+    placeholder:"",
+    label:"",
+    value:"",
+    reg:"",
+    field:"",
+    cb:function(){}
+}
 
-// LeInput.propTypes = {
-//     disabled: PropTypes.bool,
-//     tips:PropTypes.string,
-//     errorMessage:PropTypes.string,
-//     placeholder:PropTypes.string,
-//     label:PropTypes.string,
-//     value:PropTypes.string,
-//     reg:PropTypes.string
-// }
+LeInput.propTypes = {
+    type:PropTypes.string,
+    disabled: PropTypes.bool,
+    tips:PropTypes.string,
+    errorMessage:PropTypes.string,
+    placeholder:PropTypes.string,
+    label:PropTypes.string,
+    value:PropTypes.string,
+    reg:PropTypes.string,
+    field:PropTypes.string,
+    cb:PropTypes.func
+}
