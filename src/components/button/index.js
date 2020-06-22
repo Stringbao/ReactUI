@@ -1,8 +1,10 @@
 import React from 'react';
 import "./index.scss";
 import Tool from "@core/tool.js";
+import PropTypes from 'prop-types';
+import KEYS from "@comp/define.js";
 
-export default class extends React.Component{
+export default class LeButton extends React.Component{
     constructor(props){
         super(props);
         this._id = Tool._idSeed.newId();
