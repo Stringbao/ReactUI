@@ -102,7 +102,7 @@ export default class LeInput extends React.Component{
     }
 
     setValue(){
-
+        
     }
 
     setFocus(){
