@@ -1,6 +1,6 @@
 
 import React from 'react'
-import {LeInput, LeButton} from "./out/index.js";
+import {LeInput, LeButton, LeCheckbox} from "./out/index.js";
 
 export default class Demo extends React.Component{
     constructor(props){
@@ -13,9 +13,7 @@ export default class Demo extends React.Component{
         }
     }
 
-    componentDidMount(){
-       
-    }
+    
 
     getClick(num){
         if(num == 1){
@@ -63,6 +61,25 @@ export default class Demo extends React.Component{
         })
     }
 
+    componentDidMount(){
+        let data = [
+            {name:"aaa",id:"1",age:"1"},
+            {name:"bbb",id:"2",age:"2"},
+            {name:"ccc",id:"3",age:"3"}
+        ];
+        this.refs["ck1"].init(data);
+
+        window.setTimeout(()=>{
+            this.refs["ck1"].setCheckedItems("1,2");
+
+            console.log(this.refs["ck1"].getItemByField("name","aaa"));
+        },3000)
+     }
+
+     changeCheckboxItem(data){
+         console.log(data);
+     }
+
     render(){
         return (
             <div>
@@ -77,6 +94,9 @@ export default class Demo extends React.Component{
                 <br />
                 <input type="button" value="set1" onClick={e=>this.setClick(1)}></input>
                 <input type="button" value="set2" onClick={e=>this.setClick(2)}></input>
+
+
+                <LeCheckbox change={this.changeCheckboxItem} ref='ck1' displayName="name" displayValue="id" label="请选择"></LeCheckbox>
             </div>
         );
     }

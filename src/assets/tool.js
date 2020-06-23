@@ -471,6 +471,15 @@ let CommonUtil = {
                 }
             })
             return res;
+        },
+        getItemByField(arr,field,value){
+           let res = null;
+           arr.forEach(x=>{
+               if(x[field] == value){
+                   res = x;
+               }
+           }) 
+           return res;
         }
     }
 }
