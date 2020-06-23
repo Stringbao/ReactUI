@@ -65,16 +65,16 @@ export default class LeInput extends React.Component{
         // this.props.onDomEvent && this.props.onDomEvent(type,event);
     }   
 
-    changeHandler(event){
+    changeHandler=(event)=>{
         this.callbackDomEvent(KEYS.EVENT_KEY.CHANGE,event);
     }
 
-    focusHandler(event){
+    focusHandler=(event)=>{
         this.setState({focus:true});
         this.callbackDomEvent(KEYS.EVENT_KEY.FOCUS,event);
     }
 
-    blurHandler(event){
+    blurHandler=(event)=>{
         if(this.props.value){
             this.setState({
                 focus:true
@@ -87,7 +87,7 @@ export default class LeInput extends React.Component{
         this.callbackDomEvent(KEYS.EVENT_KEY.BLUR,event);
     }
 
-    keyDownHandler(event){
+    keyDownHandler=(event)=>{
         if(event.keyCode == "13"){
             this.callbackDomEvent(KEYS.EVENT_KEY.ENTER,event);
         }
@@ -109,7 +109,7 @@ export default class LeInput extends React.Component{
         document.getElementById(this._id).focus();
     }
 
-    doClear(e){
+    doClear=(e)=>{
         e.target.value = "";
         document.getElementById(this._id).focus();
         this.callbackDomEvent(KEYS.EVENT_KEY.CHANGE,event);
@@ -127,12 +127,12 @@ export default class LeInput extends React.Component{
                             <label>{this._label}</label>
                             <input id={this._id} value = {this.props.value} type={this.props.type =="text"?"text":"password"}
                                 placeholder = {this.getPlaceHolder()}
-                                onFocus={(e)=>this.focusHandler(e)} 
-                                onBlur={(e)=>this.blurHandler(e)}
-                                onChange={(e)=>this.changeHandler(e)}
-                                onKeyDown={(e)=>this.keyDownHandler(e)}
+                                onFocus={this.focusHandler} 
+                                onBlur={this.blurHandler}
+                                onChange={this.changeHandler}
+                                onKeyDown={this.keyDownHandler}
                             />
-                            <i style={{display:this.getClearIconStatus()}} onClick={(e) => this.doClear(e)} className='input_icon_close'></i>
+                            <i style={{display:this.getClearIconStatus()}} onClick={this.doClear} className='input_icon_close'></i>
                         </div>
                     </div>
                     <div className="input_detail"></div>

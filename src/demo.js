@@ -40,9 +40,9 @@ export default class Demo extends React.Component{
 
     dome(field,type,e){
         if(type == "change"){
-            let tmp = {};
-            tmp[field] = e.target.value;
-            this.setState(tmp);
+            this.setState({
+                [field]:e.target.value
+            });
         }
         if(type == "enter"){
             console.log(id,event.target.value);

@@ -139,48 +139,7 @@ let CommonUtil = {
                 }, delay);
             }
         },
-        addPrimaryAndCk(data, ck) {
-            data.map(item => {
-                if (ck != undefined) {
-                    if (!ck) {
-                        item.ck = false;
-                    } else {
-                        item.ck = true;
-                    }
-                } else {
-                    item.ck = false;
-                }
-                item.cls = "";
-                item.__tmpId = tool._idSeed.newId();
-            });
-            return data;
-        },
-        getCheckedItems(arr, field) {
-            let res = {
-                items: [],
-                vals: []
-            };
-            arr.map(item => {
-                if (item.ck) {
-                    res.items.push(item);
-                    if (field) {
-                        res.vals.push(item[field]);
-                    }
-                }
-            })
-            return res;
-        },
-        getInfoInArrayByField(field, vals, array) {
-            let res = [];
-            vals.map(item => {
-                array.map(k => {
-                    if (k[vals] == item) {
-                        res.push(k);
-                    }
-                })
-            })
-            return res;
-        }
+        
     },
     cookie: {
         removeCookie(name) {
@@ -473,6 +432,45 @@ let CommonUtil = {
             let r = window.location.search.substr(1).match(reg);
             if (r != null) return decodeURI(r[2]);
             return "";
+        }
+    },
+    comp:{
+        cloneObj(source) {
+            if (source) {
+                return JSON.parse(JSON.stringify(source));
+            }
+            return null;
+        },
+        addPrimaryAndCk(data, ck) {
+            data.map(item => {
+                if (ck != undefined) {
+                    if (!ck) {
+                        item.__ck = false;
+                    } else {
+                        item.__ck = true;
+                    }
+                } else {
+                    item.__ck = false;
+                }
+                item.__cls = "";
+                item.__tmpId = CommonUtil._idSeed.newId();
+            });
+            return data;
+        },
+        getCheckedItems(arr, field) {
+            let res = {
+                items: [],
+                vals: []
+            };
+            arr.map(item => {
+                if (item.__ck) {
+                    res.items.push(item);
+                    if (field) {
+                        res.vals.push(item[field]);
+                    }
+                }
+            })
+            return res;
         }
     }
 }
