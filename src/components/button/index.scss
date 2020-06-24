@@ -1,20 +1,42 @@
+.btn_group{
+    display: flex;
+    justify-content: space-around;
+}
 .btn{
+    cursor: pointer;
     height: 36px;
     min-width: 64px;
     padding: 0 16px;
     box-shadow: 0 3px 1px -2px rgba(0,0,0,.2),0 2px 2px 0 rgba(0,0,0,.14),0 1px 5px 0 rgba(0,0,0,.12);
     color: #ffffff;
     background-color: #6200ea;
-    cursor: pointer;
     position: relative;
+}
+.btn.primary{
+    background-color: #1867c0 !important;
+    border-color: #1867c0 !important;
+}
+.btn.delete{
+    background-color: #ff5252 !important;
+    border-color: #ff5252 !important;
+}
+.btn.normal{
+    color: rgba(0,0,0,.87) !important;
+    background-color: #f5f5f5 !important;
 }
 ._ripples{
     position: absolute;
-    background: #fff;
-    transform: translate(-50%,-50%);  /* 实现水平垂直居中 */
-    pointer-events: none;
-    border-radius: 50%;
-    animation: ripple 1s linear infinite;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    &>span{
+        position: absolute;
+        background: #fff;
+        transform: translate(-50%,-50%);  /* 实现水平垂直居中 */
+        pointer-events: none;
+        border-radius: 50%;
+        animation: ripple 1.5s linear infinite;
+    }
 }
 @keyframes ripple {
     0%{
@@ -26,5 +48,12 @@
         width: 500px;
         height: 500px;
         opacity: 0;
+    }
+}
+.btn:disabled{
+    color: rgba(0,0,0,.26)!important;
+    background-color: rgba(0,0,0,.12)!important;
+    ._ripples{
+        display: none;
     }
 }
