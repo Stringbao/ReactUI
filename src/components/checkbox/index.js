@@ -27,9 +27,9 @@ export default class LeCheckbox extends React.Component{
         const listItems = [];
         this.state.data.map(x=>{
             listItems.push(
-                <div key={x.__tmpId} id={x.__tmpId}>
+                <div key={x._tmpId} id={x._tmpId}>
                     <label>{x[this._displayName]}</label>
-                    <span><input type="checkbox" checked={x.__ck} onChange={()=>{this.changeItem(x)}}></input></span>
+                    <span><input type="checkbox" checked={x._ck} onChange={()=>{this.changeItem(x)}}></input></span>
                 </div>
             )
         })
@@ -56,7 +56,7 @@ export default class LeCheckbox extends React.Component{
 
     /*************** Event begin *****************/
     changeItem = (item)=>{
-        item.__ck = !item.__ck;
+        item._ck = !item._ck;
         let items = this.getCheckedItems();
         this.props.change && this.props.change(items);
         this.setState({
@@ -90,10 +90,10 @@ export default class LeCheckbox extends React.Component{
     setCheckedItems(ids){
         this.state.data.forEach(x=>{
             let itemValue = x[this._displayValue];
-            if(!x.__ck){
+            if(!x._ck){
                 ids && ids.split && ids.split(',') && ids.split(',').forEach(id=>{
                     if(id == itemValue){
-                        x.__ck = true;
+                        x._ck = true;
                     }
                 })
             }
@@ -109,7 +109,7 @@ export default class LeCheckbox extends React.Component{
 
     clear(){
         this.state.data.forEach(x=>{
-            x.__ck = false;
+            x._ck = false;
         })
         this.setState({
             data:this.state.data

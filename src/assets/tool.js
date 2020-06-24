@@ -445,15 +445,15 @@ let CommonUtil = {
             data.map(item => {
                 if (ck != undefined) {
                     if (!ck) {
-                        item.__ck = false;
+                        item._ck = false;
                     } else {
-                        item.__ck = true;
+                        item._ck = true;
                     }
                 } else {
-                    item.__ck = false;
+                    item._ck = false;
                 }
-                item.__cls = "";
-                item.__tmpId = CommonUtil._idSeed.newId();
+                item._cls = "";
+                item._tmpId = CommonUtil._idSeed.newId();
             });
             return data;
         },
@@ -463,7 +463,7 @@ let CommonUtil = {
                 vals: []
             };
             arr.map(item => {
-                if (item.__ck) {
+                if (item._ck) {
                     res.items.push(item);
                     if (field) {
                         res.vals.push(item[field]);
