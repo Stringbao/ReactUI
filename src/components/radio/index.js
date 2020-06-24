@@ -26,7 +26,7 @@ export default class LeRadio extends React.Component{
             listItems.push(
                 <div key={x._tmpId} id={x._tmpId}>
                     <label>{x[this.props.displayName]}</label>
-                    <span><input type="checkbox" checked={x._ck} onChange={()=>{this.changeItem(x)}}></input></span>
+                    <span><input name={this._id} type="radio" checked={x._ck} onChange={()=>{this.changeItem(x)}}></input></span>
                 </div>
             )
         })
@@ -43,25 +43,29 @@ export default class LeRadio extends React.Component{
     }
 
     shouldComponentUpdate(props,next){
-        if(next.data.length == 0){
-            return false;
-        }
         return true;
     }
     /*************** 生命周期 end *****************/
 
-
     /*************** Event begin *****************/
     changeItem = (item)=>{
-        item._ck = !item._ck;
-        let items = this.getCheckedItems();
-        this.props.change && this.props.change(items);
-        this.setState({
-            data:this.state.data
-        })
+        if(!item._ck){
+            this.state.data.forEach(x=>{
+                if(x._tmpId == item._tmpId){
+                    item._ck = true;
+                }else{
+                    x._ck = false;
+                }
+            })
+            
+            let items = this.getCheckedItems();
+            this.props.change && this.props.change(items);
+            this.setState({
+                data:this.state.data
+            })
+        }
     }
     /*************** Event end *****************/
-
 
     /*************** Methods begin *****************/
     init(data){
@@ -81,7 +85,10 @@ export default class LeRadio extends React.Component{
 
     getCheckedItems(){
         let res = Tool.comp.getCheckedItems(this.state.data,this.props.displayValue);
-        return res;
+        if(res.items.length == 0){
+            return null;
+        }
+        return {items:res.items[0],vals:res.vals[0]};
     }
 
     setCheckedItems(ids){

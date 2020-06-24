@@ -1,6 +1,7 @@
 
 import React from 'react'
-import {LeInput, LeButton, LeCheckbox} from "./out/index.js";
+import {LeInput, LeButton, LeCheckbox, LeRadio} from "./out/index.js";
+import Tool from "@core/tool.js";
 
 export default class Demo extends React.Component{
     constructor(props){
@@ -69,6 +70,8 @@ export default class Demo extends React.Component{
         ];
         this.refs["ck1"].init(data);
 
+        this.refs["rd1"].init(Tool.object.cloneObj(data));
+
         window.setTimeout(()=>{
             this.refs["ck1"].setCheckedItems("1,2");
 
@@ -97,6 +100,8 @@ export default class Demo extends React.Component{
 
 
                 <LeCheckbox change={this.changeCheckboxItem} ref='ck1' displayName="name" displayValue="id" label="请选择"></LeCheckbox>
+
+                <LeRadio change={this.changeCheckboxItem} ref='rd1' displayName="name" displayValue="id" label="请选择"></LeRadio>
             </div>
         );
     }

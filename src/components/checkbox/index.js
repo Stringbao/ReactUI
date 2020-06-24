@@ -43,9 +43,6 @@ export default class LeCheckbox extends React.Component{
     }
 
     shouldComponentUpdate(props,next){
-        if(next.data.length == 0){
-            return false;
-        }
         return true;
     }
     /*************** 生命周期 end *****************/
