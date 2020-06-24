@@ -66,12 +66,12 @@ export default class LeInput extends React.Component{
     }   
 
     changeHandler=(event)=>{
-        this.callbackDomEvent(KEYS.EVENT_KEY.CHANGE,event);
+        this.callbackDomEvent(KEYS.EVENT_KEY.INPUT.CHANGE,event);
     }
 
     focusHandler=(event)=>{
         this.setState({focus:true});
-        this.callbackDomEvent(KEYS.EVENT_KEY.FOCUS,event);
+        this.callbackDomEvent(KEYS.EVENT_KEY.INPUT.FOCUS,event);
     }
 
     blurHandler=(event)=>{
@@ -84,14 +84,14 @@ export default class LeInput extends React.Component{
                 focus:false
             })
         }
-        this.callbackDomEvent(KEYS.EVENT_KEY.BLUR,event);
+        this.callbackDomEvent(KEYS.EVENT_KEY.INPUT.BLUR,event);
     }
 
     keyDownHandler=(event)=>{
         if(event.keyCode == "13"){
-            this.callbackDomEvent(KEYS.EVENT_KEY.ENTER,event);
+            this.callbackDomEvent(KEYS.EVENT_KEY.INPUT.ENTER,event);
         }
-        // this.callbackDomEvent(KEYS.EVENT_KEY.PRESS,event);
+        // this.callbackDomEvent(KEYS.EVENT_KEY.INPUT.PRESS,event);
     }
     /*************** Event end *****************/
 
@@ -112,7 +112,7 @@ export default class LeInput extends React.Component{
     doClear=(e)=>{
         e.target.value = "";
         document.getElementById(this._id).focus();
-        this.callbackDomEvent(KEYS.EVENT_KEY.CHANGE,event);
+        this.callbackDomEvent(KEYS.EVENT_KEY.INPUT.CHANGE,event);
     }
     /*************** Methods end *****************/
     
