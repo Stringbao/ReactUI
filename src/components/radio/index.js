@@ -9,10 +9,7 @@ export default class LeRadio extends React.Component{
     constructor(props){
         super(props);
         this._id = Tool._idSeed.newId();
-        this._validataType = "checkbox";
-        this._label = this.props.label;
-        this._displayName = this.props.displayName;
-        this._displayValue = this.props.displayValue;
+        this._validataType = "radio";
 
         this._data = [];
         
@@ -28,7 +25,7 @@ export default class LeRadio extends React.Component{
         this.state.data.map(x=>{
             listItems.push(
                 <div key={x._tmpId} id={x._tmpId}>
-                    <label>{x[this._displayName]}</label>
+                    <label>{x[this.props.displayName]}</label>
                     <span><input type="checkbox" checked={x._ck} onChange={()=>{this.changeItem(x)}}></input></span>
                 </div>
             )
@@ -83,13 +80,13 @@ export default class LeRadio extends React.Component{
     }
 
     getCheckedItems(){
-        let res = Tool.comp.getCheckedItems(this.state.data,this._displayValue);
+        let res = Tool.comp.getCheckedItems(this.state.data,this.props.displayValue);
         return res;
     }
 
     setCheckedItems(ids){
         this.state.data.forEach(x=>{
-            let itemValue = x[this._displayValue];
+            let itemValue = x[this.props.displayValue];
             if(!x._ck){
                 ids && ids.split && ids.split(',') && ids.split(',').forEach(id=>{
                     if(id == itemValue){

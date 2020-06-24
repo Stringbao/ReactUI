@@ -10,7 +10,6 @@ export default class LeInput extends React.Component{
         super(props);
         this._id = Tool._idSeed.newId();
         this._validataType = "input";
-        this._label = this.props.label?this.props.label:"";
         
         this.state = {
             cls:"",
@@ -124,7 +123,7 @@ export default class LeInput extends React.Component{
                 <div className="input_control">
                     <div className="input_slot">
                         <div className="text_field">
-                            <label>{this._label}</label>
+                            <label>{this.props.label}</label>
                             <input id={this._id} value = {this.props.value} type={this.props.type =="text"?"text":"password"}
                                 placeholder = {this.getPlaceHolder()}
                                 onFocus={this.focusHandler} 
