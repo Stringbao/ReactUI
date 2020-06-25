@@ -30,7 +30,6 @@ export default class LeSelect extends React.Component{
     /*************** 辅助函数 begin *****************/
     getSelectedItems(){
         return Tool.comp.getCheckedItems(this.state.data).items;
-
     }
     /*************** 辅助函数 end *****************/
 
@@ -120,11 +119,7 @@ export default class LeSelect extends React.Component{
     }
 
     getCheckedItems(){
-        let res = Tool.comp.getCheckedItems(this.state.data,this.props.displayValue);
-        if(res.items.length == 0){
-            return null;
-        }
-        return {items:res.items[0],vals:res.vals[0]};
+        return Tool.comp.getCheckedItems(this.state.data,this.props.displayValue);
     }
 
     setCheckedItems(ids){
@@ -138,6 +133,7 @@ export default class LeSelect extends React.Component{
                 })
             }
         })
+        this._leftData = this.getSelectedItems();
         this.setState({
             data:this.state.data
         })
