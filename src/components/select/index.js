@@ -68,18 +68,20 @@ export default class LeSelect extends React.Component{
         if(!this._text){
             this._leftData = this.getSelectedItems();
             this._bottomData = this.state.data;
-            this.setState({
-                showBottom:true
-            })
         }
+        this.setState({
+            showBottom:true
+        })
     }
 
     leftCb=(item)=>{
         item._ck = !item._ck;
         this._leftData = this.getSelectedItems();
         this.setState({
-            data:this.state.data
+            data:this.state.data,
+            showBottom:true
         })
+        this.props.change(this._leftData);
     }
 
     bottomCb=(item)=>{
@@ -96,7 +98,7 @@ export default class LeSelect extends React.Component{
         this.setState({
             showBottom:this.props.multiple
         })
-        
+        this.props.change(this._leftData);
     }
     /*************** Event end *****************/
 
@@ -173,12 +175,14 @@ LeSelect.defaultProps = {
     displayName:"",
     displayValue:"",
     label:"",
-    multiple:false
+    multiple:false,
+    change:()=>{}
 }
 
 LeSelect.propTypes = {
     displayName:PropTypes.string,
     displayValue: PropTypes.string,
     label:PropTypes.string,
-    multiple:PropTypes.bool
+    multiple:PropTypes.bool,
+    change:PropTypes.func
 }

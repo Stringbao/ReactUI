@@ -79,7 +79,7 @@ export default class Demo extends React.Component{
                 <LeButton value="Set" click={e=>{this.refs.rd1.setCheckedItem("1")}}></LeButton>
 
                 <div>---------LeSelect-----------</div>
-                <LeSelect multiple ref='select' displayName="name" displayValue="id"></LeSelect>
+                <LeSelect multiple change={(data)=>{console.log(data)}} ref='select' displayName="name" displayValue="id"></LeSelect>
             </div>
         );
     }

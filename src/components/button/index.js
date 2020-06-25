@@ -61,6 +61,9 @@ export default class LeButton extends React.Component{
             }, 1500);
         })
     }
+    componentWillUnmount(){
+        document.getElementById(this._id).removeEventListener("click");
+    }
 
     shouldComponentUpdate(props,state){
         if(this.state.disabled == state.disabled){
