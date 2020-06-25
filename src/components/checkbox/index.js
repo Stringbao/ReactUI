@@ -9,7 +9,7 @@ export default class LeCheckbox extends React.Component{
     constructor(props){
         super(props);
         this._id = Tool._idSeed.newId();
-        this._validataType = "checkbox";
+        this._type = "checkbox";
 
         this._data = [];
         
@@ -86,7 +86,7 @@ export default class LeCheckbox extends React.Component{
             let itemValue = x[this.props.displayValue];
             if(!x._ck){
                 ids && ids.split && ids.split(',') && ids.split(',').forEach(id=>{
-                    if(id == itemValue){
+                    if(id.toString() == itemValue.toString()){
                         x._ck = true;
                     }
                 })

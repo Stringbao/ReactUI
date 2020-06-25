@@ -14,29 +14,6 @@ export default class Demo extends React.Component{
         }
     }
 
-    
-
-    getClick(num){
-        if(num == 1){
-            console.log(this.state.value);
-        }else{
-            console.log(this.state.value1);
-        }
-    }
-
-    setClick(num){
-        if(num == 1){
-            this.setState({
-                value:"yyyyy"
-            })
-        }else{
-            this.setState({
-                value1:"rrrrr"
-            })
-        }
-        
-    }
-
     dome(field,type,e){
         if(type == "change"){
             this.setState({
@@ -52,7 +29,7 @@ export default class Demo extends React.Component{
     }
 
     btnClick(e){
-        
+        console.log("clicked");
     }
 
     promiseFn(){
@@ -71,12 +48,6 @@ export default class Demo extends React.Component{
         this.refs["ck1"].init(data);
 
         this.refs["rd1"].init(Tool.object.cloneObj(data));
-
-        window.setTimeout(()=>{
-            this.refs["ck1"].setCheckedItems("1,2");
-
-            console.log(this.refs["ck1"].getItemByField("name","aaa"));
-        },3000)
      }
 
      changeCheckboxItem(data){
@@ -86,22 +57,24 @@ export default class Demo extends React.Component{
     render(){
         return (
             <div>
+                <div>---------Input-----------</div>
                 <LeInput cb = {this.dome.bind(this)} field="value" placeholder="enter name" value={this.state.value} label="Name:"></LeInput>
 
                 <LeInput cb = {this.dome.bind(this)} field="value1" placeholder="enter age" value={this.state.value1} label="Age:" ></LeInput>
 
-                <LeButton value="click" click={(e)=>this.btnClick(e)}></LeButton>
-                <LeButton value="submit" submit={()=>this.promiseFn()}></LeButton>
-                <input type="button" value="get1" onClick={e=>this.getClick(1)}></input>
-                <input type="button" value="get2" onClick={e=>this.getClick(2)}></input>
-                <br />
-                <input type="button" value="set1" onClick={e=>this.setClick(1)}></input>
-                <input type="button" value="set2" onClick={e=>this.setClick(2)}></input>
+                <div>---------Btn-----------</div>
+                <LeButton value="ClickFn" click={(e)=>this.btnClick(e)}></LeButton>
+                <LeButton value="SubmitFn" submit={()=>this.promiseFn()}></LeButton>
 
-
+                <div>---------Checkbox-----------</div>
                 <LeCheckbox change={this.changeCheckboxItem} ref='ck1' displayName="name" displayValue="id" label="请选择"></LeCheckbox>
+                <LeButton value="Get" click={(e)=>{let res = this.refs.ck1.getCheckedItems();console.log(res)}}></LeButton>
+                <LeButton value="Set" click={e=>{this.refs.ck1.setCheckedItems("1,2")}}></LeButton>
 
+                <div>---------Radio-----------</div>
                 <LeRadio change={this.changeCheckboxItem} ref='rd1' displayName="name" displayValue="id" label="请选择"></LeRadio>
+                <LeButton value="Get" click={(e)=>{let res = this.refs.rd1.getCheckedItem();console.log(res)}}></LeButton>
+                <LeButton value="Set" click={e=>{this.refs.rd1.setCheckedItem("1")}}></LeButton>
             </div>
         );
     }

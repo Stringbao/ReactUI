@@ -9,7 +9,7 @@ export default class LeInput extends React.Component{
     constructor(props){
         super(props);
         this._id = Tool._idSeed.newId();
-        this._validataType = "input";
+        this._type = "input";
         
         this.state = {
             cls:"",

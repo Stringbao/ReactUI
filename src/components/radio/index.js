@@ -9,7 +9,7 @@ export default class LeRadio extends React.Component{
     constructor(props){
         super(props);
         this._id = Tool._idSeed.newId();
-        this._validataType = "radio";
+        this._type = "radio";
 
         this._data = [];
         
@@ -83,7 +83,7 @@ export default class LeRadio extends React.Component{
         })
     }
 
-    getCheckedItems(){
+    getCheckedItem(){
         let res = Tool.comp.getCheckedItems(this.state.data,this.props.displayValue);
         if(res.items.length == 0){
             return null;
@@ -91,15 +91,12 @@ export default class LeRadio extends React.Component{
         return {items:res.items[0],vals:res.vals[0]};
     }
 
-    setCheckedItems(ids){
+    setCheckedItem(id){
         this.state.data.forEach(x=>{
-            let itemValue = x[this.props.displayValue];
-            if(!x._ck){
-                ids && ids.split && ids.split(',') && ids.split(',').forEach(id=>{
-                    if(id == itemValue){
-                        x._ck = true;
-                    }
-                })
+            if(id == x[this.props.displayValue]){
+                x._ck = true;
+            }else{
+                x._ck = false;
             }
         })
         this.setState({

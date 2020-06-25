@@ -75,7 +75,7 @@ export default class LeButton extends React.Component{
         //return null 并不会影响当前组件的声明周期，只是当前组件不会渲染
         return (<button disabled={this.state.disabled}
             onClick={this.props.click?this.click:this.submit} id={this._id} 
-            className="btn">{this.props.value + "===" + this.state.disabled}</button>)
+            className="btn">{this.props.value}</button>)
     }
 }
 
