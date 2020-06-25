@@ -69,12 +69,14 @@ export default class LeRadio extends React.Component{
 
     /*************** Methods begin *****************/
     init(data){
-        this._data = data;
-        let cloneData = Tool.comp.cloneObj(data);
-        let tmp = Tool.comp.addPrimaryAndCk(cloneData);
-        this.setState({
-            data:tmp
-        })
+        if(data && data instanceof Array && data.length != 0){
+            this._data = data;
+            let cloneData = Tool.comp.cloneObj(data);
+            let tmp = Tool.comp.addPrimaryAndCk(cloneData);
+            this.setState({
+                data:tmp
+            })
+        }
     }
 
     setDisabled(flag){

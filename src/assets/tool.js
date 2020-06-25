@@ -1,3 +1,20 @@
+let EventPublisher = function(){
+
+    this.eventCallbackDictionary = {};
+
+    this.on = function(eventName,callback){
+        this.eventCallbackDictionary[eventName] = callback;
+    }
+
+    this.broadcast = function(eventName,data){
+        for(let i in this.eventCallbackDictionary){
+            if(i == eventName && this.eventCallbackDictionary[eventName]){
+                this.eventCallbackDictionary[eventName](data);
+            }
+        }
+    }
+}
+
 let CommonUtil = {
     throwError: function (str) {
         console.log(str);
@@ -140,34 +157,6 @@ let CommonUtil = {
             }
         },
         
-    },
-    cookie: {
-        removeCookie(name) {
-            this.setCookie(name, "", new Date(0));
-        },
-        getCookie(name) {
-            let cookie = document.cookie;
-            let cookieName = encodeURIComponent(name) + "=",
-                cookieStart = cookie.indexOf(cookieName),
-                cookieValue = null;
-            if (cookieStart > -1) {
-                let cookieEnd = cookie.indexOf(';', cookieStart);
-                if (cookieEnd == -1) {
-                    cookieEnd = cookie.length;
-                }
-                cookieValue = decodeURIComponent(cookie.substring(cookieStart + cookieName.length, cookieEnd));
-            }
-            return cookieValue;
-        },
-        setCookie(name, value, expires) {
-            let cookieText = encodeURIComponent(name) + "=" + encodeURIComponent(value);
-            if (expires instanceof Date) {
-                cookieText += "; expires=" + expires.toGMTString();
-            } else {
-                cookieText += "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
-            }
-            document.cookie = cookieText + ";path=/;domain=" + document.domain;
-        },
     },
     arrayServer: {
         _private: {
@@ -414,11 +403,33 @@ let CommonUtil = {
             return res;
         }
     },
-    _idSeed: {
-        id: 10000,
-        newId: () => {
-            return CommonUtil._idSeed.id++;
-        }
+    cookie: {
+        removeCookie(name) {
+            this.setCookie(name, "", new Date(0));
+        },
+        getCookie(name) {
+            let cookie = document.cookie;
+            let cookieName = encodeURIComponent(name) + "=",
+                cookieStart = cookie.indexOf(cookieName),
+                cookieValue = null;
+            if (cookieStart > -1) {
+                let cookieEnd = cookie.indexOf(';', cookieStart);
+                if (cookieEnd == -1) {
+                    cookieEnd = cookie.length;
+                }
+                cookieValue = decodeURIComponent(cookie.substring(cookieStart + cookieName.length, cookieEnd));
+            }
+            return cookieValue;
+        },
+        setCookie(name, value, expires) {
+            let cookieText = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+            if (expires instanceof Date) {
+                cookieText += "; expires=" + expires.toGMTString();
+            } else {
+                cookieText += "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
+            }
+            document.cookie = cookieText + ";path=/;domain=" + document.domain;
+        },
     },
     url:{
         getUrlParam(name) {
@@ -434,6 +445,13 @@ let CommonUtil = {
             return "";
         }
     },
+    _idSeed: {
+        id: 10000,
+        newId: () => {
+            return CommonUtil._idSeed.id++;
+        }
+    },
+    _event_publisher:new EventPublisher(),
     comp:{
         cloneObj(source) {
             if (source) {
@@ -480,6 +498,18 @@ let CommonUtil = {
                }
            }) 
            return res;
+        },
+        checkIsArray(data){
+            if(!data || data instanceof Array == false){
+                return false;
+            }
+            return true;
+        },
+        checkArrayNull(data){
+            if(this.checkIsArray(data) && data.length > 0){
+                return false;
+            }
+            return true;
         }
     }
 }

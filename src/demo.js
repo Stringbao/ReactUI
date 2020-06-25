@@ -1,6 +1,6 @@
 
 import React from 'react'
-import {LeInput, LeButton, LeCheckbox, LeRadio} from "./out/index.js";
+import {LeInput, LeButton, LeCheckbox, LeRadio,LeSelect} from "./out/index.js";
 import Tool from "@core/tool.js";
 
 export default class Demo extends React.Component{
@@ -48,6 +48,8 @@ export default class Demo extends React.Component{
         this.refs["ck1"].init(data);
 
         this.refs["rd1"].init(Tool.object.cloneObj(data));
+
+        this.refs["select"].init(Tool.object.cloneObj(data));
      }
 
      changeCheckboxItem(data){
@@ -75,6 +77,9 @@ export default class Demo extends React.Component{
                 <LeRadio change={this.changeCheckboxItem} ref='rd1' displayName="name" displayValue="id" label="请选择"></LeRadio>
                 <LeButton value="Get" click={(e)=>{let res = this.refs.rd1.getCheckedItem();console.log(res)}}></LeButton>
                 <LeButton value="Set" click={e=>{this.refs.rd1.setCheckedItem("1")}}></LeButton>
+
+                <div>---------LeSelect-----------</div>
+                <LeSelect multiple ref='select' displayName="name" displayValue="id"></LeSelect>
             </div>
         );
     }
