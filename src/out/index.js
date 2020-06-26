@@ -3,11 +3,13 @@ import LeButton from '@comp/button/index.js';
 import LeCheckbox from '@comp/checkbox/index.js';
 import LeRadio from '@comp/radio/index.js';
 import LeSelect from '@comp/select/index.js';
+import AutoCompleted from "@comp/autoCompleted/index.js";
 
 export {
     LeInput,
     LeButton,
     LeCheckbox,
     LeRadio,
-    LeSelect
+    LeSelect,
+    AutoCompleted
 }

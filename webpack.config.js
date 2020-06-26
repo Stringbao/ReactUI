@@ -51,7 +51,7 @@ let webpackConfig = {
             "@comp": path.resolve(__dirname, "./src/components"),
             "@core": path.resolve(__dirname,"./src/assets")
         }
-    },
+    }
 };
 
 module.exports = merge(webpackConfig, _mergeConfig);

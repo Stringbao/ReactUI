@@ -1,6 +1,6 @@
 
 import React from 'react'
-import {LeInput, LeButton, LeCheckbox, LeRadio,LeSelect} from "./out/index.js";
+import {LeInput, LeButton, LeCheckbox, LeRadio, LeSelect, AutoCompleted} from "./out/index.js";
 import Tool from "@core/tool.js";
 
 export default class Demo extends React.Component{
@@ -53,7 +53,15 @@ export default class Demo extends React.Component{
      }
 
      changeCheckboxItem(data){
-         console.log(data);
+        console.log(data);
+     }
+
+     analysis(data){
+        return data;
+     }
+
+     enterItem(item){
+        console.log(item._index);
      }
 
     render(){
@@ -82,6 +90,9 @@ export default class Demo extends React.Component{
                 <LeSelect multiple change={(data)=>{console.log(data)}} ref='select' displayName="name" displayValue="id"></LeSelect>
                 <LeButton value="Get" click={(e)=>{let res = this.refs.select.getCheckedItems();console.log(res)}}></LeButton>
                 <LeButton value="Set" click={e=>{this.refs.select.setCheckedItems("1,2")}}></LeButton>
+
+                <div>----------AutoCompleted------------------</div>
+                <AutoCompleted enter={this.enterItem} url="/suggest?keyword=" displayName="resultCount" analysis={this.analysis}></AutoCompleted>
             </div>
         );
     }

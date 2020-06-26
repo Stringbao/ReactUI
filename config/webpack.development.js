@@ -23,7 +23,7 @@ module.exports = {
         openPage: './index.html',
         proxy: {
             '/':{
-                target: 'https://admin.nec.lenovouat.cn/',
+                target: 'https://s.nec.lenovouat.com',
                 secure: false,
                 changeOrigin: true
             },

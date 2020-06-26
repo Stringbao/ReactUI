@@ -460,7 +460,7 @@ let CommonUtil = {
             return null;
         },
         addPrimaryAndCk(data, ck) {
-            data.map(item => {
+            data.map((item,index) => {
                 if (ck != undefined) {
                     if (!ck) {
                         item._ck = false;
@@ -471,6 +471,7 @@ let CommonUtil = {
                     item._ck = false;
                 }
                 item._cls = "";
+                item._index = index;
                 item._tmpId = CommonUtil._idSeed.newId();
             });
             return data;
