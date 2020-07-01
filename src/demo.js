@@ -12,6 +12,7 @@ export default class Demo extends React.Component{
             value1:"a",
             value2:"b"
         }
+        this._radioSelect = "";
     }
 
     dome(field,type,e){
@@ -52,9 +53,9 @@ export default class Demo extends React.Component{
         this.refs["select"].init(Tool.object.cloneObj(data));
      }
 
-     changeCheckboxItem(data){
-        console.log(data);
-     }
+    //  changeCheckboxItem(data){
+    //     console.log(data);
+    //  }
 
      analysis(data){
         return data;
@@ -82,9 +83,10 @@ export default class Demo extends React.Component{
                 <LeButton value="Set" click={e=>{this.refs.ck1.setCheckedItems("1,2")}}></LeButton>
 
                 <div>---------Radio-----------</div>
-                <LeRadio change={this.changeCheckboxItem} ref='rd1' displayName="name" displayValue="id" label="请选择"></LeRadio>
+                <LeRadio field={{context:this,key:"_radioSelect"}} change={this.changeCheckboxItem} ref='rd1' displayName="name" displayValue="id" label="请选择"></LeRadio>
                 <LeButton value="Get" click={(e)=>{let res = this.refs.rd1.getCheckedItem();console.log(res)}}></LeButton>
                 <LeButton value="Set" click={e=>{this.refs.rd1.setCheckedItem("1")}}></LeButton>
+                <LeButton value="Submit" click={e=>{console.log(this._radioSelect)}}></LeButton>
 
                 <div>---------LeSelect-----------</div>
                 <LeSelect multiple change={(data)=>{console.log(data)}} ref='select' displayName="name" displayValue="id"></LeSelect>

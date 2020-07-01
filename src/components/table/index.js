@@ -12,6 +12,7 @@ export default class LeRadio extends React.Component{
         this._type = "radio";
 
         this._data = [];
+        
         this.state = {
             data:[],
             disabled:false
@@ -57,9 +58,7 @@ export default class LeRadio extends React.Component{
                 }
             })
             
-            let items = this.getCheckedItem();
-            this.props.field && (this.props.field.context[this.props.field.key] = items);
-
+            let items = this.getCheckedItems();
             this.props.change && this.props.change(items);
             this.setState({
                 data:this.state.data
