@@ -22,11 +22,19 @@ module.exports = {
         port: "9999",
         openPage: './index.html',
         proxy: {
+            '/admin':{
+                target: 'https://admin.nec.lenovouat.com',
+                pathRewrite: {
+                    "^/admin": ""
+                },
+                secure: false,
+                changeOrigin: true
+            },
             '/':{
                 target: 'https://s.nec.lenovouat.com',
                 secure: false,
                 changeOrigin: true
-            },
+            }
         },
         //404 页面返回 index.html
         historyApiFallback: true,

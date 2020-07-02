@@ -1,7 +1,8 @@
 
 import React from 'react'
-import {LeInput, LeButton, LeCheckbox, LeRadio, LeSelect, AutoCompleted} from "./out/index.js";
+import {LeInput, LeButton, LeCheckbox, LeRadio, LeSelect, AutoCompleted,TableList} from "./out/index.js";
 import Tool from "@core/tool.js";
+import Ajax from "@core/fetch.js";
 
 export default class Demo extends React.Component{
     constructor(props){
@@ -13,6 +14,57 @@ export default class Demo extends React.Component{
             value2:"b"
         }
         this._radioSelect = "";
+
+        this.tableOptions = {
+            showCk: true,
+            single: false,
+            map: [
+                { key: "partnerId", val: "<#BP ID#>",convert:this.comb },
+                { key: "bpname", val: "<#BP Name#>"},
+                { key: "account", val: "<#Email#>" },
+                { key: "custId", val: "<#Customer Id#>" },
+                { key: "groupName", val: "<#group Name#>" },
+                { key: "userType", val: "<#user Type#>" },
+                { key: "company", val: "<#company#>" },
+            ],
+            getUrl: () => {
+                return "/admin/accountAPI/admin/group/getusergroups";
+            },
+            pageOption: {
+                sizeKey: "pageSize",
+                indexKey: "pageNum",
+                index: 1,
+                size: 10
+            },
+            actions: [
+                {
+                    key: "update",
+                    val: "<#编辑#>",
+                    action: this.edit,
+                }
+            ],
+            analysis: data => {
+                if (data && data.data) {
+                    return {
+                        data: data.data.rows,
+                        count: data.data.total
+                    };
+                } else {
+                    return {
+                        data: [],
+                        count: 0
+                    };
+                }
+            }
+        }
+    }
+
+    comb(item){
+        return "<span>123</span>"
+    }
+
+    edit(item){
+        debugger
     }
 
     dome(field,type,e){
@@ -51,23 +103,42 @@ export default class Demo extends React.Component{
         this.refs["rd1"].init(Tool.object.cloneObj(data));
 
         this.refs["select"].init(Tool.object.cloneObj(data));
-     }
+    }
 
     //  changeCheckboxItem(data){
     //     console.log(data);
     //  }
 
-     analysis(data){
-        return data;
-     }
+    analysis(data){
+    return data;
+    }
 
-     enterItem(item){
-        console.log(item._index);
-     }
+    enterItem(item){
+    console.log(item._index);
+    }
+
+    btnLogin(){
+        let uid = "wupeng5";
+        let pwd = "Chen19910208aaa";
+        Ajax.postFetch("/admin/login",{userid:uid,password:pwd,lang:"en",code:""}).then(res=>{
+            Tool.cookie.setCookie("jid",res.data.jid);
+            Tool.cookie.setCookie("tid",res.data.tid);
+            Tool.cookie.setCookie("userName",res.data.uname);
+            Tool.cookie.setCookie("userid",uid);
+        }).catch(err=>{
+                
+        })
+    }
+
+    btnTableSearch(){
+        this.refs.table.search();
+    }
 
     render(){
         return (
             <div>
+                <div>---------Login-----------</div>
+                <LeButton value="Login" click={(e)=>this.btnLogin(e)}></LeButton>
                 <div>---------Input-----------</div>
                 <LeInput cb = {this.dome.bind(this)} field="value" placeholder="enter name" value={this.state.value} label="Name:"></LeInput>
 
@@ -95,6 +166,10 @@ export default class Demo extends React.Component{
 
                 <div>----------AutoCompleted------------------</div>
                 <AutoCompleted enter={this.enterItem} url="/suggest?keyword=" displayName="resultCount" analysis={this.analysis}></AutoCompleted>
+            
+                <div>----------AutoCompleted------------------</div>
+                <TableList ref='table' options={this.tableOptions}></TableList>
+                <LeButton value="Search" click={(e)=>this.btnTableSearch(e)}></LeButton>
             </div>
         );
     }

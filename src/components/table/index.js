@@ -1,140 +1,192 @@
 
 import Tool from "@core/tool.js";
+import Ajax from "@core/fetch.js";
 import React from 'react';
 import PropTypes from 'prop-types';
-import './index.scss';
-import KEYS from "@comp/define.js";
+import "./index.scss";
+import Head from "./head.js";
+import Body from "./body.js";
+import Paging from "./paging.js";
 
-export default class LeRadio extends React.Component{
+export default class TableList extends React.Component{
     constructor(props){
         super(props);
-        this._id = Tool._idSeed.newId();
-        this._type = "radio";
 
-        this._data = [];
-        
+        this._options = this.props.options;
+
         this.state = {
             data:[],
-            disabled:false
+            paging:{
+                index:this._options.pageOption.index,
+                size:this._options.pageOption.size,
+                count:1,
+            },
+            ckAll:false,
+            isLoading:false
         }
     }
 
     /*************** 辅助函数 begin *****************/
-    getCheckboxItems(){
-        const listItems = [];
-        this.state.data.map(x=>{
-            listItems.push(
-                <div key={x._tmpId} id={x._tmpId}>
-                    <label>{x[this.props.displayName]}</label>
-                    <span><input name={this._id} type="radio" checked={x._ck} onChange={()=>{this.changeItem(x)}}></input></span>
-                </div>
-            )
-        })
-        return listItems;
-    }
-
-    /*************** 辅助函数 end *****************/
-
-    /*************** 生命周期 begin *****************/
-    componentWillReceiveProps(props){}
-
-    componentDidMount(){
-        
-    }
-
-    shouldComponentUpdate(props,next){
-        return true;
-    }
-    /*************** 生命周期 end *****************/
-
-    /*************** Event begin *****************/
-    changeItem = (item)=>{
-        if(!item._ck){
-            this.state.data.forEach(x=>{
-                if(x._tmpId == item._tmpId){
-                    item._ck = true;
-                }else{
-                    x._ck = false;
-                }
-            })
-            
-            let items = this.getCheckedItems();
-            this.props.change && this.props.change(items);
-            this.setState({
-                data:this.state.data
-            })
-        }
-    }
-    /*************** Event end *****************/
-
-    /*************** Methods begin *****************/
-    init(data){
-        if(data && data instanceof Array && data.length != 0){
-            this._data = data;
-            let cloneData = Tool.comp.cloneObj(data);
-            let tmp = Tool.comp.addPrimaryAndCk(cloneData);
-            this.setState({
-                data:tmp
-            })
-        }
-    }
-
-    setDisabled(flag){
-        this.setState({
-            disabled:flag
-        })
-    }
-
-    getCheckedItem(){
-        let res = Tool.comp.getCheckedItems(this.state.data,this.props.displayValue);
-        if(res.items.length == 0){
-            return null;
-        }
-        return {items:res.items[0],vals:res.vals[0]};
-    }
-
-    setCheckedItem(id){
-        this.state.data.forEach(x=>{
-            if(id == x[this.props.displayValue]){
-                x._ck = true;
-            }else{
-                x._ck = false;
+    setNull(){
+        this.setState(
+            {
+                data:[],
+                aging:{
+                    index:this._options.pageOption.index,
+                    size:this._options.pageOption.size,
+                    count:1,
+                },
+                ckAll:false,
+                isLoading:false
             }
-        })
-        this.setState({
-            data:this.state.data
-        })
+        )
     }
-
-    getItemByField(field,value){
-        return Tool.comp.getItemByField(this.state.data,field,value);
+    showLoading(flag){
+        this.setState(
+            {
+                isLoading:flag
+            }
+        )
     }
+    getData(index = 1){
+        if(this.state.isLoading){
+            return;
+        }
+        let url = this._options.getUrl();
+        if(!url){
+            this.setNull();
+        }else{
+            this.showLoading(true);
+            let suffix = url.indexOf('?') === -1?"?":"&";
+            let size = this._options.pageOption.size;
+            url += suffix + this._options.pageOption.indexKey + "=" + index + "&"+ this._options.pageOption.sizeKey + "=" + size;
 
-    clear(){
+            Ajax.getFetch(url).then(data=>{
+                let res = this._options.analysis(data);
+                if(!Tool.comp.checkArrayNull(res.data)){
+                    let arr = Tool.comp.addPrimaryAndCk(res.data);
+                    this.setState({
+                        data:arr,
+                        paging:{
+                            index:index,
+                            size:size,
+                            count:res.count,
+                        },
+                        ckAll:false,
+                        isLoading:false
+                    });
+                }else{
+                    this.setNull();
+                }
+            }).catch(err=>{
+                this.setNull();
+            })
+        }
+    }
+    resetCkStatus(flag){
         this.state.data.forEach(x=>{
             x._ck = false;
         })
+    }
+    /*************** 辅助函数 end   *****************/
+    
+    /*************** 生命周期 begin *****************/
+    componentDidMount(){
+        this.search();
+    }
+    /*************** 生命周期 end   *****************/
+
+    /*************** Event begin   *****************/
+    prev=()=>{
+        let index = this._options.pageOption.index;
+        index--;
+        this.getData(index);
+    }
+    next=()=>{
+        let index = this._options.pageOption.index;
+        index++;
+        this.getData(index);
+    }
+    gIndex=(index)=>{
+        this.getData(index);
+    }
+    /*************** Event end     *****************/
+
+    /*************** Methods begin *****************/
+    headToParent = (flag)=>{
+        this.resetCkStatus(flag);
         this.setState({
+            ckAll:flag,
             data:this.state.data
         })
     }
-    /*************** Methods end *****************/
-    
+
+    bodyToParent=(flag)=>{
+        this.setState({
+            ckAll:flag,
+            data:this.state.data
+        })
+    }
+
+    sizeToParent = (size)=>{
+        this._options.pageOption.size = size;
+        this.getData(1);
+    }
+
+    enterToParent=(index)=>{
+        this._options.pageOption.index = index;
+        this.getData(index);
+    }
+
+    prevToParent=(index)=>{
+        this._options.pageOption.index = index;
+        this.getData(index);
+    }
+
+    nextToParent=(index)=>{
+        this._options.pageOption.index = index;
+        this.getData(index);
+    }
+
+    search(flag){
+        if(flag == undefined){
+            this.getData();
+        }else{
+            this.getData(this._options.pageOption.index);
+        }
+    }
+
+    /*************** Methods end   *****************/
     render(){
         return (
-            this.state.data.length ==0?null:this.getCheckboxItems()
+            <div>
+                <table>
+                    <Head ckAll={this.state.ckAll} options={this._options} headToParent={this.headToParent}></Head>
+                    {/* <Body options={this._options} data={this.state.data} bodyToParent={this.bodyToParent}></Body> */}
+                    
+                </table>
+                {/* <Paging prevToParent={this.prevToParent} nextToParent={this.nextToParent} paging={this.state.paging} enterToParent={this.enterToParent} sizeToParent = {this.sizeToParent}></Paging> */}
+            </div>
         )
     }
 }
 
-LeRadio.defaultProps = {
-    displayName:"",
-    displayValue:"",
-    label:""
+TableList.defaultProps = {
+    options:{
+        showCk:false,
+        single:false,
+        map:[],
+        getUrl:()=>{return ""},
+        pageOption:{
+            sizeKey:"pageSize",
+            indexKey:"pageNum",
+            index:1,
+            size:10
+        },
+        actions:[]
+    },
 }
 
-LeRadio.propTypes = {
-    displayName:PropTypes.string,
-    displayValue: PropTypes.string,
-    label:PropTypes.string
+TableList.propTypes = {
+    options:PropTypes.object
 }

@@ -1,5 +1,6 @@
 import Q from "q";
 import loading from '@comp/loading/index.js';
+import $ from "jquery";
 
 let _fetch = {
     showLoadingDialog(flag){
@@ -56,36 +57,29 @@ let _fetch = {
         let symbol = url.indexOf('?') == -1?"?":"&";
         url = url + symbol + "ran="+Math.random();
         let defer = Q.defer();
-        let headers = {
-            // 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-            'Content-Type': 'application/json; charset=UTF-8'
-        };
-        let options = {
-            method:"post",
-            credentials:'include',
-            headers:headers
-        };
-        if(data){
-            options.body = JSON.stringify(data);
-        }
-        fetch(url,options).then(d =>d.json()).then((data)=> {
-            let code = data.status;
-            let message = data.msg;
-            let d = data.data?data.data:data.result;
-            if(code == "200" || code == "0"){
-                defer.resolve({data:d,params:data.params});
-            }else if(code == "701"){
-                // _vue_instance.$router.push({path:"/"});
-                window.top.location.href = "./login.html";
-                defer.resolve({data:d,params:data.params});
-            }else{
-                defer.reject({data: message});
+        $.ajax({
+            type:"post",
+            data:data,
+            dataType:"json",
+            url:url,
+            success:function(data){
+                let code = data.status;
+                let message = data.msg;
+                let d = data.data;
+                if(code == "200"){
+                    defer.resolve({data:d,params:data.params});
+                }else if(code == "701"){
+                    alert("not login");
+                }else{
+                    defer.reject({data: message});
+                }
+                that.hideLoadingDialog();
+            },
+            error:function(err){
+                defer.reject({data: err});
+                that.hideLoadingDialog();
             }
-            that.hideLoadingDialog();
-        }).catch(function(err) {
-            defer.reject({data: err});
-            that.hideLoadingDialog();
-        });
+        })
         return defer.promise;
     },
     uploadFetch:function(url,data,showLoading){

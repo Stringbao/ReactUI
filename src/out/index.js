@@ -4,6 +4,7 @@ import LeCheckbox from '@comp/checkbox/index.js';
 import LeRadio from '@comp/radio/index.js';
 import LeSelect from '@comp/select/index.js';
 import AutoCompleted from "@comp/autoCompleted/index.js";
+import TableList from "@comp/table/index.js";
 
 export {
     LeInput,
@@ -11,5 +12,6 @@ export {
     LeCheckbox,
     LeRadio,
     LeSelect,
-    AutoCompleted
+    AutoCompleted,
+    TableList
 }
