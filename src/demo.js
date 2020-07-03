@@ -17,7 +17,7 @@ export default class Demo extends React.Component{
 
         this.tableOptions = {
             showCk: true,
-            single: true,
+            single: false,
             map: [
                 { key: "partnerId", val: "<#BP ID#>",convert:this.comb },
                 { key: "bpname", val: "<#BP Name#>"},
