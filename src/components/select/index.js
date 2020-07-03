@@ -29,7 +29,10 @@ export default class LeSelect extends React.Component{
 
     /*************** 辅助函数 begin *****************/
     getSelectedItems(){
-        return Tool.comp.getCheckedItems(this.state.data).items;
+        return Tool.comp.getCheckedItems(this.state.data);
+    }
+    getLeftData(){
+        return this.getCheckedItems().items;
     }
     /*************** 辅助函数 end *****************/
 
@@ -56,7 +59,7 @@ export default class LeSelect extends React.Component{
                 res.push(x);
             }
         })
-        this._leftData = this.getSelectedItems();
+        this._leftData = this.getLeftData();
         this._bottomData = res;
         this.setState({
             data:this.state.data
@@ -65,7 +68,7 @@ export default class LeSelect extends React.Component{
     clickText=(e)=>{
         this._text = e.target.value;
         if(!this._text){
-            this._leftData = this.getSelectedItems();
+            this._leftData = this.getLeftData();
             this._bottomData = this.state.data;
         }
         this.setState({
@@ -75,7 +78,7 @@ export default class LeSelect extends React.Component{
 
     leftCb=(item)=>{
         item._ck = !item._ck;
-        this._leftData = this.getSelectedItems();
+        this._leftData = this.getLeftData();
         this.setState({
             data:this.state.data,
             showBottom:true
@@ -93,7 +96,7 @@ export default class LeSelect extends React.Component{
         }else{
             item._ck = !item._ck;
         }
-        this._leftData = this.getSelectedItems();
+        this._leftData = this.getLeftData();
         this.setState({
             showBottom:this.props.multiple
         })
@@ -133,7 +136,7 @@ export default class LeSelect extends React.Component{
                 })
             }
         })
-        this._leftData = this.getSelectedItems();
+        this._leftData = this.getLeftData();
         this.setState({
             data:this.state.data
         })

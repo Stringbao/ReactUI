@@ -11,10 +11,14 @@ export default class Head extends React.Component{
     /*************** 辅助函数 begin *****************/
     getHeaderCk(){
         let res = null;
-        if(this.props.options.showCk && !this.props.options.single){
-            res = <th><input type="checkbox" checked={this.props.ckAll} onChange={this.ckAllFn} /></th>;
+        if(this.props.options.showCk){
+            if(!this.props.options.single){
+                res = <th><input type="checkbox" checked={this.props.ckAll} onChange={this.ckAllFn} /></th>;
+            }else{
+                res = <th></th>;
+            }
         }else{
-            res = <th></th>;
+            res = null;
         }
         return res;
     }
@@ -43,7 +47,8 @@ export default class Head extends React.Component{
     /*************** 生命周期 begin *****************/
     shouldComponentUpdate(props,state){
         let flag = Tool.object.equalsObject(this.props.options.map,props.options.map);
-        if(flag){
+        let ckFlag = this.props.ckAll == props.ckAll;
+        if(flag && ckFlag){
             return false;
         }
         return true;
@@ -53,6 +58,7 @@ export default class Head extends React.Component{
     /*************** Event begin   *****************/
     ckAllFn=()=>{
         this.props.headToParent(!this.props.ckAll);
+        Tool._event_publisher.broadcast("CkAllChanged");
     }
     /*************** Event end     *****************/
 
@@ -60,6 +66,7 @@ export default class Head extends React.Component{
 
     /*************** Methods end   *****************/
     render(){
+        console.log("render table head");
         return (
             <thead>
                 <tr>

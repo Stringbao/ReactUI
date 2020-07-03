@@ -14,6 +14,11 @@ export default class TableList extends React.Component{
 
         this._options = this.props.options;
 
+        //第一次渲染 不加载组件
+        this._isInit = false;
+        //控制tabel组件的重复查询
+        this._isLoading = false;
+
         this.state = {
             data:[],
             paging:{
@@ -21,8 +26,7 @@ export default class TableList extends React.Component{
                 size:this._options.pageOption.size,
                 count:1,
             },
-            ckAll:false,
-            isLoading:false
+            ckAll:false
         }
     }
 
@@ -36,32 +40,26 @@ export default class TableList extends React.Component{
                     size:this._options.pageOption.size,
                     count:1,
                 },
-                ckAll:false,
-                isLoading:false
+                ckAll:false
             }
         )
-    }
-    showLoading(flag){
-        this.setState(
-            {
-                isLoading:flag
-            }
-        )
+        this._isLoading = false;
     }
     getData(index = 1){
-        if(this.state.isLoading){
+        if(this._isLoading){
             return;
         }
         let url = this._options.getUrl();
         if(!url){
             this.setNull();
         }else{
-            this.showLoading(true);
+            this._isLoading = true;
             let suffix = url.indexOf('?') === -1?"?":"&";
             let size = this._options.pageOption.size;
             url += suffix + this._options.pageOption.indexKey + "=" + index + "&"+ this._options.pageOption.sizeKey + "=" + size;
 
             Ajax.getFetch(url).then(data=>{
+                this._isInit = true;
                 let res = this._options.analysis(data);
                 if(!Tool.comp.checkArrayNull(res.data)){
                     let arr = Tool.comp.addPrimaryAndCk(res.data);
@@ -72,12 +70,12 @@ export default class TableList extends React.Component{
                             size:size,
                             count:res.count,
                         },
-                        ckAll:false,
-                        isLoading:false
+                        ckAll:false
                     });
                 }else{
                     this.setNull();
                 }
+                this._isLoading = false;
             }).catch(err=>{
                 this.setNull();
             })
@@ -85,7 +83,7 @@ export default class TableList extends React.Component{
     }
     resetCkStatus(flag){
         this.state.data.forEach(x=>{
-            x._ck = false;
+            x._ck = flag;
         })
     }
     /*************** 辅助函数 end   *****************/
@@ -107,12 +105,7 @@ export default class TableList extends React.Component{
         index++;
         this.getData(index);
     }
-    gIndex=(index)=>{
-        this.getData(index);
-    }
-    /*************** Event end     *****************/
 
-    /*************** Methods begin *****************/
     headToParent = (flag)=>{
         this.resetCkStatus(flag);
         this.setState({
@@ -121,21 +114,30 @@ export default class TableList extends React.Component{
         })
     }
 
-    bodyToParent=(flag)=>{
-        this.setState({
-            ckAll:flag,
-            data:this.state.data
-        })
+    bodyToParent=(type,flag)=>{
+        if(type=="checkbox"){
+            this.setState({
+                ckAll:flag,
+                data:this.state.data
+            })
+        }else{
+            debugger
+            if(flag._ck){
+                return;
+            }
+            this.resetCkStatus(false);
+            flag._ck = true;
+            this.setState({
+                ckAll:false,
+                data:this.state.data
+            })
+        }
     }
 
     sizeToParent = (size)=>{
         this._options.pageOption.size = size;
+        this._options.pageOption.index = 1;
         this.getData(1);
-    }
-
-    enterToParent=(index)=>{
-        this._options.pageOption.index = index;
-        this.getData(index);
     }
 
     prevToParent=(index)=>{
@@ -147,7 +149,9 @@ export default class TableList extends React.Component{
         this._options.pageOption.index = index;
         this.getData(index);
     }
+    /*************** Event end     *****************/
 
+    /*************** Methods begin *****************/
     search(flag){
         if(flag == undefined){
             this.getData();
@@ -156,16 +160,21 @@ export default class TableList extends React.Component{
         }
     }
 
+    getSelectItems(field){
+        return Tool.comp.getCheckedItems(this.state.data,field);
+    }
     /*************** Methods end   *****************/
     render(){
+        if(!this._isInit){
+            return null;
+        }
         return (
             <div>
                 <table>
                     <Head ckAll={this.state.ckAll} options={this._options} headToParent={this.headToParent}></Head>
-                    {/* <Body options={this._options} data={this.state.data} bodyToParent={this.bodyToParent}></Body> */}
-                    
+                    <Body options={this._options} data={this.state.data} bodyToParent={this.bodyToParent}></Body>
                 </table>
-                {/* <Paging prevToParent={this.prevToParent} nextToParent={this.nextToParent} paging={this.state.paging} enterToParent={this.enterToParent} sizeToParent = {this.sizeToParent}></Paging> */}
+                <Paging prevToParent={this.prevToParent} nextToParent={this.nextToParent} paging={this.state.paging} sizeToParent = {this.sizeToParent}></Paging>
             </div>
         )
     }

@@ -19,6 +19,24 @@ export default class LeButton extends React.Component{
             disabled:flag
         });
     }
+
+    animation(e){
+        e.preventDefault();
+        let rippleBox = document.createElement("div");
+        rippleBox.style.width = e.target.offsetWidth  + "px";
+        rippleBox.style.height = e.target.offsetHeight + "px";
+        rippleBox.classList.add("_ripples")
+        let x = e.offsetX;
+        let y = e.offsetY;
+        let ripples = document.createElement("span");
+        ripples.style.left = x + "px";
+        ripples.style.top = y + "px";
+        rippleBox.appendChild(ripples);
+        e.target.appendChild(rippleBox);
+        setTimeout(() => {
+            rippleBox.remove();
+        }, 1500);
+    }
     /*************** Methods end   *****************/
 
     /*************** Event begin *****************/
@@ -43,26 +61,13 @@ export default class LeButton extends React.Component{
 
     /*************** 生命周期 begin *****************/
     componentDidMount(){
+        let that = this;
         document.getElementById(this._id).addEventListener('click', function (e) {
-            e.preventDefault();
-            let rippleBox = document.createElement("div");
-            rippleBox.style.width = e.target.offsetWidth  + "px";
-            rippleBox.style.height = e.target.offsetHeight + "px";
-            rippleBox.classList.add("_ripples")
-            let x = e.offsetX;
-            let y = e.offsetY;
-            let ripples = document.createElement("span");
-            ripples.style.left = x + "px";
-            ripples.style.top = y + "px";
-            rippleBox.appendChild(ripples);
-            e.target.appendChild(rippleBox);
-            setTimeout(() => {
-                rippleBox.remove();
-            }, 1500);
+            that.animation(e);
         })
     }
     componentWillUnmount(){
-        document.getElementById(this._id).removeEventListener("click");
+        document.getElementById(this._id).removeEventListener("click",this.animation);
     }
 
     shouldComponentUpdate(props,state){

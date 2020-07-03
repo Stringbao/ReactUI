@@ -17,7 +17,7 @@ export default class Demo extends React.Component{
 
         this.tableOptions = {
             showCk: true,
-            single: false,
+            single: true,
             map: [
                 { key: "partnerId", val: "<#BP ID#>",convert:this.comb },
                 { key: "bpname", val: "<#BP Name#>"},
@@ -60,7 +60,12 @@ export default class Demo extends React.Component{
     }
 
     comb(item){
-        return "<span>123</span>"
+        if(item.id > 500){
+            return <span style={{color:'Red'}}>{item.id}</span>;
+        }else{
+            return <span style={{color:'green'}}>{item.id}</span>;
+        }
+        
     }
 
     edit(item){
@@ -131,7 +136,7 @@ export default class Demo extends React.Component{
     }
 
     btnTableSearch(){
-        this.refs.table.search();
+        this.refs.table.search(true);
     }
 
     render(){
@@ -169,7 +174,8 @@ export default class Demo extends React.Component{
             
                 <div>----------AutoCompleted------------------</div>
                 <TableList ref='table' options={this.tableOptions}></TableList>
-                <LeButton value="Search" click={(e)=>this.btnTableSearch(e)}></LeButton>
+                <LeButton value="Search" click={(e)=>this.refs.table.search(true)}></LeButton>
+                <LeButton value="Get" click={(e)=>{let res = this.refs.table.getSelectItems("id");console.log(res);}}></LeButton>
             </div>
         );
     }

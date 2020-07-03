@@ -6,6 +6,10 @@ import PropTypes from 'prop-types';
 export default class Body extends React.Component{
     constructor(props){
         super(props);
+
+        this._needUpdate = false;
+
+        this._radioName = Tool._idSeed.newId();
     }
 
     /*************** 辅助函数 begin *****************/
@@ -13,9 +17,9 @@ export default class Body extends React.Component{
         let res = null;
         if(this.props.options.showCk){
             if(this.props.options.single){
-                res = (<th><input type="radio" class="singleSelected" checked={item._ck} onClick={()=>{this.this.clickCk('checkbox',item)}} /></th>);
+                res = <td><input type="radio" name={this._radioName} className="singleSelected" checked={item._ck} onChange={()=>{this.clickCk('radio',item)}} /></td>;
             }else{
-                res = (<th><input type="checkbox" class="singleSelected" checked={item._ck} onClick={()=>{this.this.clickCk('radio',item)}} /></th>);
+                res = <td><input type="checkbox" className="singleSelected" checked={item._ck} onChange={()=>{this.clickCk('checkbox',item)}} /></td>;
             }
         }else{
             res = null;
@@ -28,7 +32,7 @@ export default class Body extends React.Component{
         }
         let res = [];
         this.props.options.actions.forEach((x,idx)=>{
-            res.push(<div key={idx}><input type="button" value={x.val} onClick={()=>{x.action(item)}}></input></div>)
+            res.push(<input key={idx} type="button" value={x.val} onClick={()=>{x.action(item)}}></input>)
         })
         return <td>{res}</td>;
     }
@@ -70,9 +74,15 @@ export default class Body extends React.Component{
     getContentTd(item){
         let res = [];
         this.props.options.map.forEach((x,idx)=>{
+            let tmp = null;
+            if(x.convert){
+                tmp = <>{x.convert(item)}</>;
+            }else{
+                tmp = <>{this.getValByFieldInRow(x,item)}</>;
+            }
             res.push(
-            <td key={idx}>
-                <div onClick={x.action && x.action(item)}>{x.convert && this.getValByFieldInRow(x,item)}</div>
+            <td key={idx} onClick={x.action && x.action(item)}>
+                {tmp}
             </td>)
         })
         return res;
@@ -80,14 +90,10 @@ export default class Body extends React.Component{
     getItems(){
         let res = [];
         this.props.data.forEach(x => {
-            let tmp = [];
             let cktd = this.getCkTd(x);
             let actionTd = this.getActionsTd(x);
-            let contentTd = this.getContentTd();
-            Array.prototype.push.apply(tmp,cktd);
-            Array.prototype.push.apply(tmp,actionTd);
-            Array.prototype.push.apply(tmp,contentTd);
-            let tr = <tr>{tmp}</tr>;
+            let contentTd = this.getContentTd(x);
+            let tr = <tr key={x._tmpId}>{cktd}{actionTd}{contentTd}</tr>;
             res.push(tr);
         });
         return res;
@@ -106,7 +112,18 @@ export default class Body extends React.Component{
 
     /*************** 生命周期 begin *****************/
     shouldComponentUpdate(props,state){
-        return true;
+        let dataFlag = Tool.object.equalsObject(this.props.data,props.data);
+        if(!dataFlag || this._needUpdate){
+            this._needUpdate = false;
+            return true;
+        }
+        return false;
+    }
+
+    componentDidMount(){
+        Tool._event_publisher.on("CkAllChanged",()=>{
+            this._needUpdate = true;
+        });
     }
     /*************** 生命周期 end   *****************/
 
@@ -118,21 +135,22 @@ export default class Body extends React.Component{
     clickCk = (tag,item)=>{
         let tmp = false;
         if(tag == "checkbox"){
-            item.ck = !item.ck;
+            item._ck = !item._ck;
             if(this.getCheckedRowCount() == this.props.data.length){
                 tmp = true;
             }
+            this.props.bodyToParent("checkbox",tmp);
         }else{
-            tmp = false;
+            this.props.bodyToParent("radio",item);
         }
-
-        this.props.bodyToParent(tmp);
+        this._needUpdate = true;
     }
     /*************** Methods end   *****************/
 
     render(){
+        console.log("render table body");
         if(this.props.data.length == 0){
-            return <div>暂无数据</div>
+            return <tbody><tr><td>暂无数据</td></tr></tbody>
         }
         return (
             <tbody>

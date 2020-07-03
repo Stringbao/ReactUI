@@ -8,7 +8,6 @@ export default class Paging extends React.Component{
         super(props);
         
         this._size = this.props.paging.size;
-        this._enterText = "";
     }
 
     /*************** 辅助函数 begin *****************/
@@ -17,48 +16,38 @@ export default class Paging extends React.Component{
 
     /*************** 生命周期 begin *****************/
     componentWillReceiveProps(props){
-        this._size = props.paging.size;
+        // this._size = props.paging.size;
     }
 
     shouldComponentUpdate(props,state){
-        let flag = Tool.object.equalsObject(this.props.paging,props.paging);
-        if(flag){
-            return false;
-        }
-        return true;
+        return !Tool.object.equalsObject(this.props.paging,props.paging);
     }
     /*************** 生命周期 end   *****************/
 
     /*************** Event begin   *****************/
-    changeSize = ()=>{
+    changeSize = (e)=>{
+        this._size = parseInt(e.target.value);
         this.props.sizeToParent(this._size);
     }
 
-    changeText = (e)=>{
-        this._enterText = e.target.value;
-    }
     goPrev=()=>{
         if(this.props.paging.index == 1){
             return;
         }
-        let index = this.props.paging.index--;
-        this.prevToParent(index);
+        let index = this.props.paging.index - 1;
+        this.props.prevToParent(index);
     }
     goNext=()=>{
         let total = this.getTotal();
         if(this.props.paging.index == total){
             return;
         }
-        let index = this.props.paging.index++;
-        this.nextToParent(index);
+        let index = this.props.paging.index + 1;
+        this.props.nextToParent(index);
     }
     /*************** Event end     *****************/
 
     /*************** Methods begin *****************/
-    goTo(){
-        this.props.enterToParent(this._enterText);
-    }
-
     getTotal(){
         let total = -1;
         let count = this.props.paging.count;
@@ -73,6 +62,7 @@ export default class Paging extends React.Component{
     /*************** Methods end   *****************/
 
     render(){
+        console.log("render table paging");
         return (
             <div>
                 <select value={this._size} onChange={this.changeSize} >
@@ -85,8 +75,6 @@ export default class Paging extends React.Component{
                 当前页:{this.props.paging.index}/{this.getTotal()}
                 <input type="button" value="上一页" onClick={this.goPrev}></input>
                 <input type="button" value="下一页" onClick={this.goNext}></input>
-                跳转:<input type="text" value={this._enterText} onChange={this.changeText}></input>
-                <input type="button" onClick={this.goTo}></input>
             </div>
         )
     }

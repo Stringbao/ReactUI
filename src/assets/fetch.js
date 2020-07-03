@@ -36,7 +36,7 @@ let _fetch = {
                 defer.resolve({data:d,params:data.params});
             }else if(code == "701"){
                 // _vue_instance.$router.push({path:"/"});
-                window.top.location.href = "./login.html";
+                // window.top.location.href = "./login.html";
                 defer.resolve({data:d,params:data.params});
             }else{
                 defer.reject({data: message});
