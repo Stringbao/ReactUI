@@ -1,6 +1,6 @@
 
 import React from 'react'
-import {LeInput, LeButton, LeCheckbox, LeRadio, LeSelect, AutoCompleted,TableList} from "./out/index.js";
+import {LeInput, LeButton, LeCheckbox, LeRadio, LeSelect, AutoCompleted,TableList, LeUpload} from "./out/index.js";
 import Tool from "@core/tool.js";
 import Ajax from "@core/fetch.js";
 
@@ -56,6 +56,18 @@ export default class Demo extends React.Component{
                     };
                 }
             }
+        }
+
+        this.uploadOpts = {
+            label:"上传头像",
+            multiple:true,
+            // vtype:"png,jpg",
+            url:"/admin/file/img/upload",
+            fname:"file",
+            tip:"提示：图片格式为png",
+            analysis:(d)=>{
+                return d.data;
+            },
         }
     }
 
@@ -172,10 +184,13 @@ export default class Demo extends React.Component{
                 <div>----------AutoCompleted------------------</div>
                 <AutoCompleted enter={this.enterItem} url="/suggest?keyword=" displayName="resultCount" analysis={this.analysis}></AutoCompleted>
             
-                <div>----------AutoCompleted------------------</div>
+                <div>----------TableList------------------</div>
                 <TableList ref='table' options={this.tableOptions}></TableList>
                 <LeButton value="Search" click={(e)=>this.refs.table.search(true)}></LeButton>
                 <LeButton value="Get" click={(e)=>{let res = this.refs.table.getSelectItems("id");console.log(res);}}></LeButton>
+
+                <div>----------Upload------------------</div>
+                <LeUpload options={this.uploadOpts}></LeUpload>
             </div>
         );
     }

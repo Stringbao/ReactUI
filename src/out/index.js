@@ -5,6 +5,7 @@ import LeRadio from '@comp/radio/index.js';
 import LeSelect from '@comp/select/index.js';
 import AutoCompleted from "@comp/autoCompleted/index.js";
 import TableList from "@comp/table/index.js";
+import LeUpload from "@comp/upload/index.js";
 
 export {
     LeInput,
@@ -13,5 +14,6 @@ export {
     LeRadio,
     LeSelect,
     AutoCompleted,
-    TableList
+    TableList,
+    LeUpload
 }
