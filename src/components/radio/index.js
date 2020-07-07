@@ -131,11 +131,13 @@ export default class LeRadio extends React.Component{
 LeRadio.defaultProps = {
     displayName:"",
     displayValue:"",
-    label:""
+    label:"",
+    field:{}
 }
 
 LeRadio.propTypes = {
     displayName:PropTypes.string,
     displayValue: PropTypes.string,
-    label:PropTypes.string
+    label:PropTypes.string,
+    field:PropTypes.object
 }

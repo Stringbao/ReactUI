@@ -4,6 +4,28 @@ import {LeInput, LeButton, LeCheckbox, LeRadio, LeSelect, AutoCompleted,TableLis
 import Tool from "@core/tool.js";
 import Ajax from "@core/fetch.js";
 
+//aaaa|b|c
+//c,aa
+//return aaaa|b|d|
+function compareCode(orginCode,newCode){
+    var originArr = orginCode.split('|');
+    var newArr = newCode.split(',');
+    var temp = [];
+    originArr.forEach(function(x){
+        var exist = false;
+        newArr.forEach(function(xx){
+            if(x == xx){
+                exist = true;
+            }
+        })
+        if(!exist){
+            temp.push(x);
+        }
+    });
+    return temp;
+}
+compareCode("aaaa|b|c","c,aa")
+
 export default class Demo extends React.Component{
     constructor(props){
         super(props);
@@ -58,12 +80,16 @@ export default class Demo extends React.Component{
             }
         }
 
+        this._uploadSrcs = {src:""};
         this.uploadOpts = {
+            field:{context:this,key:"_uploadSrcs.src"},
             label:"上传头像",
             multiple:true,
-            // vtype:"png,jpg",
+            vtype:"png,jpg",
+            size:"2",
             url:"/admin/file/img/upload",
             fname:"file",
+            msg:"上传头像必须为xxx格式",
             tip:"提示：图片格式为png",
             analysis:(d)=>{
                 return d.data;

@@ -11,9 +11,15 @@ export default class LeUpload extends React.Component{
 
         this._doUploading = false;
 
+        this._vType = this.props.options.vtype;
+        this._vSize = this.props.options.size;
+        this._field = this.props.options.field;
+
+        this._fileInput = null;
+
         this._value = "";
         this.state = {
-            disabled:this.props.options.disabled == undefined?false:his.props.options.disabled,
+            disabled:this.props.options.disabled == undefined?false:this.props.options.disabled,
             showError:false,
             srcs:[],
             names:[]
@@ -23,6 +29,41 @@ export default class LeUpload extends React.Component{
     }
 
     /*************** 辅助函数 begin *****************/
+    reloadFileInputValue(){
+        this._fileInput.value = "";
+    }
+    setStateError(){
+        this._doUploading = false;
+        this.setState({
+            showError:true,
+            srcs:[],
+            names:[]
+        }) 
+    }
+    checkTypeAndSize(fileList){
+        if(!this._vType && !this._vSize){
+            return true;
+        }
+        let bl = true;
+        for(let i=0;i<fileList.length;i++){
+            if(this._vType){
+                let fileName = fileList[i].name;
+                let suffix = fileName.substring(fileName.lastIndexOf('.')+1);
+                if(this._vType.indexOf(suffix) == -1){
+                    bl = false;
+                    break;
+                }
+            }
+            if(this._vSize){
+                let fileSize = fileList[i].size;
+                if(fileSize > this._vSize * 1024 *1024){
+                    bl = false;
+                    break
+                }
+            }
+        }
+        return bl;
+    }
     getItems(){
         if(this.state.srcs.length == 0){
             return null;
@@ -43,6 +84,11 @@ export default class LeUpload extends React.Component{
             formData.append(this.props.options.fname,fileList[i]);
             names.push(fileList[i].name);
         }
+        if(!this.checkTypeAndSize(fileList)){
+            this.setStateError();
+            this.reloadFileInputValue();
+            return;
+        }
         this._doUploading = true;
         Ajax.uploadFetch(this.props.options.url, formData).then((result) => {
             let srcs = this.props.options.analysis?this.props.options.analysis(result):result;
@@ -50,23 +96,22 @@ export default class LeUpload extends React.Component{
                 showError:false,
                 srcs:srcs.split(','),
                 names:names
-            })        
-            this._doUploading = false;     
-            this.props.options.successCallback && this.props.options.successCallback(result);
-        }).catch((err) => {
+            })
+            if(this._field){
+                eval("this._field.context."+ this._field.key +" = srcs.split(',')");
+            }
             this._doUploading = false;
-            this.setState({
-                showError:true,
-                srcs:[],
-                names:[]
-            })   
+            this.props.options.successCallback && this.props.options.successCallback(result);
+            this.reloadFileInputValue();
+        }).catch((err) => {
+            this.setStateError();
             this.props.options.errorCallback && this.props.options.errorCallback(err);
+            this.reloadFileInputValue();
         });
-        
     }
     /*************** 辅助函数 end   *****************/
 
-    /*************** Event begin *****************/
+    /*************** Event begin  *****************/
     changeFile = (e)=>{
         let fileList = e.target.files;
         this.uploadFile(fileList);
@@ -95,6 +140,17 @@ export default class LeUpload extends React.Component{
             showError:flag
         });
     }
+
+    getValue(){
+        return this.state.srcs;
+    }
+
+    setValue(names,srcs){
+        this.setState({
+            names:names,
+            srcs:srcs
+        })
+    }
     /*************** Methods end   *****************/
 
     render(){
@@ -102,9 +158,9 @@ export default class LeUpload extends React.Component{
             <div>
                 {this.getItems()}
                 <label style={{display:this.props.options.label?'block':'none'}}>{this.props.options.label}</label>
-                <input disabled={this.state.disabled} multiple={this._multiple} value={this._value} onChange={this.changeFile} type="file" />
+                <input ref={(input)=>{this._fileInput = input}} disabled={this.state.disabled} multiple={this._multiple} value={this._value} onChange={this.changeFile} type="file" />
                 <span style={{display:this.props.options.tip?'block':'none'}} className="rules">{this.props.options.tip}</span>
-                <span className="rules">{this.props.options.msg}</span>
+                <span style={{display:this.state.showError?'block':'none'}}>{this.props.options.msg}</span>
             </div>
         )
     }
@@ -117,6 +173,7 @@ LeUpload.defaultProps = {
         url:"",
         fname:"",
         tip:"",
+        size:"",
         msg:"",
         label:"",
         disabled:false,
