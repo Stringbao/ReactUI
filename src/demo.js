@@ -1,6 +1,6 @@
 
 import React from 'react'
-import {LeInput, LeButton, LeCheckbox, LeRadio, LeSelect, AutoCompleted,TableList, LeUpload} from "./out/index.js";
+import {LeInput, LeButton, LeCheckbox, LeRadio, LeSelect, AutoCompleted,TableList, LeUpload, AlertFactory} from "./out/index.js";
 import Tool from "@core/tool.js";
 import Ajax from "@core/fetch.js";
 
@@ -29,6 +29,8 @@ compareCode("aaaa|b|c","c,aa")
 export default class Demo extends React.Component{
     constructor(props){
         super(props);
+
+        AlertFactory.init(this);
 
         this.state = {
             value:"",
@@ -153,11 +155,11 @@ export default class Demo extends React.Component{
     //  }
 
     analysis(data){
-    return data;
+        return data;
     }
 
     enterItem(item){
-    console.log(item._index);
+        console.log(item._index);
     }
 
     btnLogin(){
@@ -175,6 +177,10 @@ export default class Demo extends React.Component{
 
     btnTableSearch(){
         this.refs.table.search(true);
+    }
+
+    showAlert(){
+        AlertFactory.show("this is me!!!");
     }
 
     render(){
@@ -217,6 +223,9 @@ export default class Demo extends React.Component{
 
                 <div>----------Upload------------------</div>
                 <LeUpload options={this.uploadOpts}></LeUpload>
+
+                <div>----------Alert------------------</div>
+                <LeButton value="ShowAlert" click={this.showAlert}></LeButton>
             </div>
         );
     }

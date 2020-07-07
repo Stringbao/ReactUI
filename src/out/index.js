@@ -6,6 +6,7 @@ import LeSelect from '@comp/select/index.js';
 import AutoCompleted from "@comp/autoCompleted/index.js";
 import TableList from "@comp/table/index.js";
 import LeUpload from "@comp/upload/index.js";
+import AlertFactory from "@comp/alertFactory.js";
 
 export {
     LeInput,
@@ -15,5 +16,6 @@ export {
     LeSelect,
     AutoCompleted,
     TableList,
-    LeUpload
+    LeUpload,
+    AlertFactory
 }
