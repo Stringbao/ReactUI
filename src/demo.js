@@ -1,36 +1,14 @@
 
 import React from 'react'
-import {LeInput, LeButton, LeCheckbox, LeRadio, LeSelect, AutoCompleted,TableList, LeUpload, AlertFactory} from "./out/index.js";
+import {LeInput, LeButton, LeCheckbox, LeRadio, LeSelect, LeAutoCompleted,LeTableList, LeUpload, LeToolkit} from "./out/index.js";
 import Tool from "@core/tool.js";
 import Ajax from "@core/fetch.js";
-
-//aaaa|b|c
-//c,aa
-//return aaaa|b|d|
-function compareCode(orginCode,newCode){
-    var originArr = orginCode.split('|');
-    var newArr = newCode.split(',');
-    var temp = [];
-    originArr.forEach(function(x){
-        var exist = false;
-        newArr.forEach(function(xx){
-            if(x == xx){
-                exist = true;
-            }
-        })
-        if(!exist){
-            temp.push(x);
-        }
-    });
-    return temp;
-}
-compareCode("aaaa|b|c","c,aa")
 
 export default class Demo extends React.Component{
     constructor(props){
         super(props);
 
-        AlertFactory.init(this);
+        LeToolkit.init(this);
 
         this.state = {
             value:"",
@@ -180,7 +158,7 @@ export default class Demo extends React.Component{
     }
 
     showAlert(){
-        AlertFactory.show("this is me!!!");
+        LeToolkit.$alert("this is me!!!");
     }
 
     render(){
@@ -214,10 +192,10 @@ export default class Demo extends React.Component{
                 <LeButton value="Set" click={e=>{this.refs.select.setCheckedItems("1,2")}}></LeButton>
 
                 <div>----------AutoCompleted------------------</div>
-                <AutoCompleted enter={this.enterItem} url="/suggest?keyword=" displayName="resultCount" analysis={this.analysis}></AutoCompleted>
+                <LeAutoCompleted enter={this.enterItem} url="/suggest?keyword=" displayName="resultCount" analysis={this.analysis}></LeAutoCompleted>
             
                 <div>----------TableList------------------</div>
-                <TableList ref='table' options={this.tableOptions}></TableList>
+                <LeTableList ref='table' options={this.tableOptions}></LeTableList>
                 <LeButton value="Search" click={(e)=>this.refs.table.search(true)}></LeButton>
                 <LeButton value="Get" click={(e)=>{let res = this.refs.table.getSelectItems("id");console.log(res);}}></LeButton>
 

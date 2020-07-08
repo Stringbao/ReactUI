@@ -3,10 +3,10 @@ import LeButton from '@comp/button/index.js';
 import LeCheckbox from '@comp/checkbox/index.js';
 import LeRadio from '@comp/radio/index.js';
 import LeSelect from '@comp/select/index.js';
-import AutoCompleted from "@comp/autoCompleted/index.js";
-import TableList from "@comp/table/index.js";
+import LeAutoCompleted from "@comp/autoCompleted/index.js";
+import LeTableList from "@comp/table/index.js";
 import LeUpload from "@comp/upload/index.js";
-import AlertFactory from "@comp/alertFactory.js";
+import LeToolkit from "@comp/letoolkit/index.js";
 
 export {
     LeInput,
@@ -14,8 +14,8 @@ export {
     LeCheckbox,
     LeRadio,
     LeSelect,
-    AutoCompleted,
-    TableList,
+    LeAutoCompleted,
+    LeTableList,
     LeUpload,
-    AlertFactory
+    LeToolkit
 }
