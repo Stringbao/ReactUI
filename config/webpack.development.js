@@ -23,7 +23,7 @@ module.exports = {
         openPage: './index.html',
         proxy: {
             '/admin':{
-                target: 'https://admin.nec.lenovouat.com',
+                target: '',
                 pathRewrite: {
                     "^/admin": ""
                 },
@@ -31,7 +31,7 @@ module.exports = {
                 changeOrigin: true
             },
             '/':{
-                target: 'https://s.nec.lenovouat.com',
+                target: '',
                 secure: false,
                 changeOrigin: true
             }
